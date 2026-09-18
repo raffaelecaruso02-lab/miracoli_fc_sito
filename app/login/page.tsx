@@ -61,6 +61,7 @@ export default function LoginPage() {
         )}
 
         <button
+	type="button"
           onClick={submit}
           disabled={busy || !email}
           className="mt-5 w-full rounded-xl bg-[#7B1123] py-3.5 font-semibold text-white disabled:bg-slate-300"
