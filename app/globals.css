@@ -1,0 +1,14 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bordeaux: #7B1123;
+  --color-bordeaux-deep: #660B1A;
+  --color-celeste: #5BC0EB;
+  --color-celeste-light: #78D5FA;
+}
+
+html { -webkit-text-size-adjust: 100%; }
+body { background: #F8FAFC; color: #1E293B; }
+
+/* L'appello si fa a bordo campo: niente zoom accidentale sui pulsanti. */
+button { touch-action: manipulation; }
