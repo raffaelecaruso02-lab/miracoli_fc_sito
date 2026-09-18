@@ -181,12 +181,22 @@ export default function RegistroPresenze({
     void flush();
   };
 
+  const [closed, setClosed] = useState(false);
+  const [closeError, setCloseError] = useState<string | null>(null);
+
   const closeSession = async () => {
+    setSaving(true);
+    setCloseError(null);
     await flush();
-    await supabase
+
+    const { error } = await supabase
       .from("training_sessions")
       .update({ closed_at: new Date().toISOString() })
       .eq("id", session.id);
+
+    setSaving(false);
+    if (error) setCloseError(error.message);
+    else setClosed(true);
   };
 
   /* --- Contatori --------------------------------------------------- */
@@ -338,9 +348,23 @@ export default function RegistroPresenze({
           <span>{counts.justified} giustificati</span>
           <span>{counts.injured} infortunati</span>
         </div>
-        <button
+                <button
+          type="button"
           onClick={closeSession}
-          disabled={counts.pending > 0}
+          disabled={counts.pending > 0 || closed || saving}
+          className="w-full rounded-xl bg-[#7B1123] px-4 py-3.5 font-semibold text-white transition active:scale-[0.99] disabled:bg-slate-300"
+        >
+          {closed
+            ? "Appello inviato in segreteria ✓"
+            : saving
+              ? "Invio in corso…"
+              : counts.pending > 0
+                ? `Mancano ${counts.pending} atleti`
+                : "Chiudi l'appello"}
+        </button>
+        {closeError && (
+          <p className="mt-2 text-center text-sm text-rose-600">{closeError}</p>
+        )}
           className="w-full rounded-xl bg-[#7B1123] px-4 py-3.5 font-semibold text-white transition active:scale-[0.99] disabled:bg-slate-300"
         >
           {counts.pending > 0 ? `Mancano ${counts.pending} atleti` : "Chiudi l'appello"}
